@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import TodoContainer from '@/components/todos/TodoContainer';
+import Nav from '@/components/Nav';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -12,12 +12,17 @@ export const metadata: Metadata = {
   description: '투두리스트, my todo list',
 };
 
-export default function RootLayout() {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="ko">
       <body className={inter.className}>
         <Header />
-        <TodoContainer />
+        <Nav />
+        {children}
         <Footer />
       </body>
     </html>

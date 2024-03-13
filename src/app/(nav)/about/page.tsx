@@ -1,15 +1,15 @@
 import React from 'react';
 
 const about = async () => {
-  const response = await fetch(`http://localhost:4000/companyInfo`);
-  const data = await response.json();
+  const response = await fetch('http://localhost:4000/companyInfo');
+  const companyInfo = await response.json();
 
   return (
     <div>
       <h1>CompanyInfo</h1>
       <div>
-        <p>{data.name}</p>
-        <p>{data.desctiption}</p>
+        <p>{companyInfo.name}</p>
+        <p>{companyInfo.desctiption}</p>
       </div>
     </div>
   );

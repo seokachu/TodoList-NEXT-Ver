@@ -8,8 +8,6 @@ export async function GET(request: Request) {
     });
   }
 
-  console.log(companyInfo);
-
   return Response.json({
     companyInfo,
   });

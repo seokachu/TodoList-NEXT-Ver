@@ -1,8 +1,9 @@
 export type Todo = {
   id: string;
   title: string;
-  content: string;
+  contents: string;
   isDone: boolean;
+  createdAt: Date;
 };
 
 export type CompanyInfo = {

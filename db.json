@@ -1,6 +1,0 @@
-{
-  "todos": [
-    { "id": "1", "title": "a title", "content": "cointent", "isDone": false },
-    { "id": "2", "title": "a title", "content": "cointent22", "isDone": false }
-  ]
-}

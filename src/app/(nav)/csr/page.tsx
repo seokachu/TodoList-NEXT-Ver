@@ -9,7 +9,7 @@ import React, { FormEvent } from 'react';
 
 const TodoCsrPage = () => {
   const queryClient = useQueryClient();
-  const route = useRouter();
+  const router = useRouter();
 
   const { formState, onChangeHandler, resetForm } = InputForm({
     id: '',
@@ -21,7 +21,7 @@ const TodoCsrPage = () => {
 
   const { title, contents } = formState;
 
-  //불러오기
+  //react-query 데이터 불러오기
   const {
     data: todos,
     isLoading,
@@ -31,7 +31,7 @@ const TodoCsrPage = () => {
     queryFn: getTodo,
   });
 
-  //생성하기
+  //추가하기
   const { mutate: createMutate } = useMutation({
     mutationFn: (newTodo: Todo) => createTodo(newTodo),
     onSuccess: () => {
@@ -70,107 +70,145 @@ const TodoCsrPage = () => {
   //게시글 작성 form
   const onSubmitHandler = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (validation()) {
-      const newTodo = {
-        title,
-        contents,
-        createdAt: new Date(),
-        id: crypto.randomUUID(),
-        isDone: false,
-      };
-      createMutate(newTodo);
-    }
+    // if (validation()) {
+    const newTodo = {
+      title,
+      contents,
+      createdAt: new Date(),
+      id: crypto.randomUUID(),
+      isDone: false,
+    };
+    createMutate(newTodo);
+    // }
   };
+
+  //벨리데이션
+  // const validation = () => {
+  //   if (!title.trim()) {
+  //     alert('제목을 입력해 주세요.');
+  //     return;
+  //   }
+  //   if (!contents.trim()) {
+  //     alert('내용을 입력해 주세요.');
+  //     return;
+  //   }
+  //   return true;
+  // };
+
+  //통계버튼 이동
+  const goToStatisticsButton = () => {
+    router.push('/report');
+  };
+
+  //삭제버튼
+  const onClickDeleteHandler = (id: string) => {
+    deleteMutate(id);
+  };
+
+  const onClickToggleHendler = ({ id, isDone }: Todo) => {
+    const newTodo = {
+      id,
+      isDone: !isDone,
+    };
+    editMutate(newTodo);
+  };
+
+  //완료버튼
+
+  return (
+    <>
+      <button onClick={goToStatisticsButton}>통계보러가기</button>
+      <section>
+        <h2>Todo 추가하기</h2>
+        <form onSubmit={onSubmitHandler}>
+          <p>
+            <label htmlFor="title">할일</label>
+            <input
+              type="text"
+              name="title"
+              id="title"
+              value={title}
+              onChange={onChangeHandler}
+              placeholder="제목을 입력해 주세요."
+              autoFocus
+            />
+          </p>
+          <p>
+            <label htmlFor="contents">내용</label>
+            <input
+              type="text"
+              name="contents"
+              id="contents"
+              value={contents}
+              onChange={onChangeHandler}
+              placeholder="내용을 입력해 주세요."
+            />
+          </p>
+          <button>추가하기</button>
+        </form>
+      </section>
+
+      <section>
+        <h1>
+          <b>해야할 일</b>
+        </h1>
+        <ul>
+          {todos
+            .filter((todo: Todo) => !todo.isDone)
+            .map((data: Todo) => (
+              <li key={data.id}>
+                <p>{data.title}</p>
+                <p>{data.contents}</p>
+                <button
+                  onClick={() => {
+                    onClickDeleteHandler(data.id);
+                  }}
+                >
+                  삭제
+                </button>
+                <button
+                  onClick={() => {
+                    onClickToggleHendler({ id: data.id, isDone: data.isDone });
+                  }}
+                >
+                  취소
+                </button>
+              </li>
+            ))}
+        </ul>
+      </section>
+
+      <section>
+        <h1>
+          <b>완료한 일</b>
+        </h1>
+        <ul>
+          {todos
+            .filter((todo: Todo) => todo.isDone)
+            .map((data: Todo) => (
+              <li key={data.id}>
+                <p>{data.title}</p>
+                <p>{data.contents}</p>
+                <button
+                  onClick={() => {
+                    onClickDeleteHandler(data.id);
+                  }}
+                >
+                  삭제
+                </button>
+                <button
+                  onClick={() => {
+                    onClickToggleHendler({ id: data.id, isDone: data.isDone });
+                  }}
+                >
+                  취소
+                </button>
+              </li>
+            ))}
+        </ul>
+      </section>
+    </>
+  );
 };
-
-//벨리데이션
-const validation = () => {
-  if (!title.trim()) {
-    alert('제목을 입력해 주세요.');
-    return;
-  }
-  if (!contents.trim()) {
-    alert('내용을 입력해 주세요.');
-    return;
-  }
-  return true;
-};
-
-//통계버튼 이동
-const goToStatisticsButton = () => {
-  route.push('/report');
-};
-
-//삭제버튼
-
-return (
-  <>
-    <section>
-      <h2>Todo 추가하기</h2>
-      <form onSubmit={onSubmitHandler}>
-        <p>
-          <label htmlFor="title">할일</label>
-          <input
-            type="text"
-            name="title"
-            id="title"
-            value={title}
-            onChange={onChangeHandler}
-            placeholder="제목을 입력해 주세요."
-            autoFocus
-          />
-        </p>
-        <p>
-          <label htmlFor="contents">내용</label>
-          <input
-            type="text"
-            name="contents"
-            id="contents"
-            value={contents}
-            onChange={onChangeHandler}
-            placeholder="내용을 입력해 주세요."
-          />
-        </p>
-        <button>추가하기</button>
-      </form>
-      <button onClick={goToStatisticsButton}>할일정보통계보러가기</button>
-    </section>
-
-    <section>
-      <h1>
-        <b>해야할 일</b>
-      </h1>
-      {todos
-        .filter((todo: Todo) => !todo.isDone)
-        .map((data: Todo) => (
-          <div key={data.id}>
-            <p>{data.title}</p>
-            <p>{data.contents}</p>
-            <button>삭제</button>
-            <button>완료</button>
-          </div>
-        ))}
-    </section>
-
-    <section>
-      <h1>
-        <b>완료한 일</b>
-      </h1>
-      <ul>
-        {todos
-          .filter((todo: Todo) => todo.isDone)
-          .map((data: Todo) => (
-            <li key={data.id}>
-              <p>{data.title}</p>
-              <p>{data.contents}</p>
-
-              <button>삭제</button>
-              <button>취소</button>
-            </li>
-          ))}
-      </ul>
-    </section>
-  </>
-);
 
 export default TodoCsrPage;

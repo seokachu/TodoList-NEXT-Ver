@@ -7,8 +7,8 @@
   "todos": [
     {
       "id": "5d547bc2-288d-476e-82c0-af3bb5a70365",
-      "title": "거지같네 진짜",
-      "contents": "123123123",
+      "title": "아메리카노 사러가기",
+      "contents": "아메리카노 살거임",
       "createdAt": "2024-03-13T15:51:28.526Z",
       "isDone": false
     },
@@ -24,7 +24,7 @@
       "title": "ㅠㅠ",
       "contents": "ㅠㅠ",
       "createdAt": "2024-03-14T03:52:39.290Z",
-      "isDone": false
+      "isDone": true
     }
   ]
 }

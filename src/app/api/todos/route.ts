@@ -13,6 +13,7 @@ export async function GET(request: Request) {
   });
 }
 
+//데이터 추가하기
 export async function POST(request: Request) {
   const { title, contents } = await request.json();
 
